@@ -11,8 +11,33 @@ export const CalculadoraScreen = () => {
         setNumero('0');
     }
 
-    const buildNumber = ( textNumber: String ) => {
-        setNumero( numero + textNumber );
+    const buildNumber = ( textNumber: string ) => {
+        if (numero.includes('.') && textNumber === '.') return;
+
+        if (numero.startsWith('0') || numero.startsWith('-0')) {
+            
+            if (textNumber === '.') {
+                setNumero( numero + textNumber );
+            } else if (textNumber === '0' && numero.includes('.')) {
+                setNumero( numero + textNumber );
+            } else if (textNumber !== '0' && !numero.includes('.')) {
+                setNumero( textNumber );
+            } else if (textNumber === '0' && !numero.includes('.')) {
+                setNumero( numero );
+            } else {
+                setNumero( numero + textNumber );
+            }
+        } else {
+            setNumero( numero + textNumber );
+        }
+    }
+
+    const positiveNegative = () => {
+        if (numero.includes('-')) {
+            setNumero(numero.replace('-', ''));
+        } else {
+            setNumero('-' + numero);
+        }
     }
 
     return (
@@ -28,7 +53,7 @@ export const CalculadoraScreen = () => {
             
             <View style={styles.fila}>
                 <BotonCalc texto="C" action={ reset } />
-                <BotonCalc texto="+/-" action={ reset } />
+                <BotonCalc texto="+/-" action={ positiveNegative } />
                 <BotonCalc texto="del" action={ reset } />
                 <BotonCalc texto="/" color="naranja" action={ reset } />
             </View>

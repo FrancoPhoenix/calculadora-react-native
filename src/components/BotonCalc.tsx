@@ -2,9 +2,9 @@ import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 interface Props {
-    texto: String,
-    ancho?: Boolean,
-    action: ( textNumber: String ) => void,
+    texto: string,
+    ancho?: boolean,
+    action: ( textNumber: string ) => void,
     color?: 'grisOscuro' | 'grisClaro' | 'naranja', 
 }
 
