@@ -3,13 +3,16 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 interface Props {
     texto: String,
+    ancho?: Boolean,
+    action: ( textNumber: String ) => void,
     color?: 'grisOscuro' | 'grisClaro' | 'naranja', 
-    ancho?: Boolean
 }
 
-export const BotonCalc = ( { texto, color = 'grisClaro', ancho = false }: Props ) => {
+export const BotonCalc = ( { texto, color = 'grisClaro', action, ancho = false }: Props ) => {
     return (
-        <TouchableOpacity>
+        <TouchableOpacity
+            onPress={ () => action(texto) }
+        >
             <View 
                 style={[styleButton.boton, styleButton[color], { width: ancho ? 180 : 80 }]}
             >
