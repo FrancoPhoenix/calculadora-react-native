@@ -1,14 +1,21 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { View, Text } from 'react-native';
 import { BotonCalc } from '../components/BotonCalc';
 import { styles } from '../theme/appTheme';
+
+enum Operations {
+    sumar, restar, multiplicar, dividir
+}
 
 export const CalculadoraScreen = () => {
     const [numeroAnterior, setNumeroAnterior] = useState('0');
     const [numero, setNumero] = useState('0');
 
+    const lastOperation = useRef<Operations>()
+
     const reset = () => {
         setNumero('0');
+        setNumeroAnterior('0');
     }
 
     const buildNumber = ( textNumber: string ) => {
@@ -48,9 +55,44 @@ export const CalculadoraScreen = () => {
         }
     }
 
+    const changeNumberBefore = () => {
+        if (numero.endsWith('.')) {
+            setNumeroAnterior(numero.slice(0, -1));
+        } else {
+            setNumeroAnterior(numero);
+        }
+
+        setNumero('0');
+    }
+
+    const toSumar = () => {
+        changeNumberBefore();
+        lastOperation.current = Operations.sumar
+    }
+
+    const toRestar = () => {
+        changeNumberBefore();
+        lastOperation.current = Operations.restar
+    }
+
+    const toMultiplicar = () => {
+        changeNumberBefore();
+        lastOperation.current = Operations.multiplicar
+    }
+
+    const toDividir = () => {
+        changeNumberBefore();
+        lastOperation.current = Operations.dividir
+    }
+
     return (
         <View style={styles.container}>
-            <Text style={styles.resultadoSmall}>{ numeroAnterior }</Text>
+            {
+                (numeroAnterior !== '0') && (
+                    <Text style={styles.resultadoSmall}>{ numeroAnterior }</Text>
+                )
+            }
+
             <Text 
                 style={styles.resultado}
                 numberOfLines={ 1 }
@@ -63,28 +105,28 @@ export const CalculadoraScreen = () => {
                 <BotonCalc texto="C" action={ reset } />
                 <BotonCalc texto="+/-" action={ positiveNegative } />
                 <BotonCalc texto="del" action={ delNumber } />
-                <BotonCalc texto="/" color="naranja" action={ reset } />
+                <BotonCalc texto="/" color="naranja" action={ toDividir } />
             </View>
 
             <View style={styles.fila}>
                 <BotonCalc texto="7" action={ buildNumber } color="grisOscuro" />
                 <BotonCalc texto="8" action={ buildNumber } color="grisOscuro" />
                 <BotonCalc texto="9" action={ buildNumber } color="grisOscuro" />
-                <BotonCalc texto="X" action={ reset } color="naranja" />
+                <BotonCalc texto="X" action={ toMultiplicar } color="naranja" />
             </View>
 
             <View style={styles.fila}>
                 <BotonCalc texto="4" action={ buildNumber } color="grisOscuro" />
                 <BotonCalc texto="5" action={ buildNumber } color="grisOscuro" />
                 <BotonCalc texto="6" action={ buildNumber } color="grisOscuro" />
-                <BotonCalc texto="-" action={ reset } color="naranja" />
+                <BotonCalc texto="-" action={ toRestar } color="naranja" />
             </View>
 
             <View style={styles.fila}>
                 <BotonCalc texto="1" action={ buildNumber } color="grisOscuro" />
                 <BotonCalc texto="2" action={ buildNumber } color="grisOscuro" />
                 <BotonCalc texto="3" action={ buildNumber } color="grisOscuro" />
-                <BotonCalc texto="+" action={ reset } color="naranja" />
+                <BotonCalc texto="+" action={ toSumar } color="naranja" />
             </View>
 
             <View style={styles.fila}>
